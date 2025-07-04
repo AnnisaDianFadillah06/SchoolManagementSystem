@@ -1,0 +1,89 @@
+using Microsoft.AspNetCore.Mvc;
+using SchoolManagementSystem.Modules.Students.Services;
+using SchoolManagementSystem.Modules.Students.Dtos;
+using SchoolManagementSystem.Common.Requests;
+using SchoolManagementSystem.Common.Responses;
+
+namespace SchoolManagementSystem.Modules.Students
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class StudentController : ControllerBase
+    {
+        private readonly IStudentService _studentService;
+
+        public StudentController(IStudentService studentService)
+        {
+            _studentService = studentService;
+        }
+
+        /// <summary>
+        /// Get all students with pagination
+        /// </summary>
+        [HttpGet]
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<StudentDto>>>> GetAllStudents(
+            [FromQuery] PaginationRequest request)
+        {
+            var response = await _studentService.GetAllAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Get student by ID
+        /// </summary>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ApiResponse<StudentDto>>> GetStudentById(int id)
+        {
+            var response = await _studentService.GetByIdAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Create a new student
+        /// </summary>
+        [HttpPost]
+        public async Task<ActionResult<ApiResponse<StudentDto>>> CreateStudent(
+            [FromBody] CreateStudentDto createDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ApiResponse<StudentDto>.ErrorResponse(
+                    "Validation failed", 400, errors));
+            }
+
+            var response = await _studentService.CreateAsync(createDto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Update an existing student
+        /// </summary>
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ApiResponse<StudentDto>>> UpdateStudent(
+            int id, [FromBody] UpdateStudentDto updateDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ApiResponse<StudentDto>.ErrorResponse(
+                    "Validation failed", 400, errors));
+            }
+
+            var response = await _studentService.UpdateAsync(id, updateDto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Delete a student
+        /// </summary>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ApiResponse<bool>>> DeleteStudent(int id)
+        {
+            var response = await _studentService.DeleteAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+    }
+}
