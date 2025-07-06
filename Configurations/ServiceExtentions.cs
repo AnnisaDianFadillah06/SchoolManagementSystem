@@ -6,6 +6,8 @@ using SchoolManagementSystem.Modules.Teachers.Services;
 using SchoolManagementSystem.Modules.Classes.Repositories;
 using SchoolManagementSystem.Modules.Classes.Services;
 using SchoolManagementSystem.Modules.Classes.Repositorie;
+using SchoolManagementSystem.Modules.Enrollments.Services;
+using SchoolManagementSystem.Modules.Enrollments.Repositories;
 
 namespace SchoolManagementSystem.Configurations
 {
@@ -26,6 +28,9 @@ namespace SchoolManagementSystem.Configurations
 
             services.AddScoped<IClassService, ClassService>();
             services.AddScoped<IClassRepository, ClassRepository>();
+
+            services.AddScoped<IEnrollmentService, EnrollmentService>();
+            services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
 
             return services;
         }

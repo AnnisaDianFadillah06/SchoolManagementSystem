@@ -20,6 +20,11 @@ namespace SchoolManagementSystem.Common.Constants
             public const string ClassCreated = "Class created successfully";
             public const string ClassUpdated = "Class updated successfully";
             public const string ClassDeleted = "Class deleted successfully";
+
+            public const string EnrollmentNotFound = "Enrollment not found";
+            public const string EnrollmentCreated = "Enrollment created successfully";
+            public const string EnrollmentUpdated = "Enrollment updated successfully";
+            public const string EnrollmentDeleted = "Enrollment deleted successfully";
         }
 
         public static class StatusCodes

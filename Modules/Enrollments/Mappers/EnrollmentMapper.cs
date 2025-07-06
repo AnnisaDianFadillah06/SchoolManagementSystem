@@ -1,0 +1,31 @@
+using AutoMapper;
+using SchoolManagementSystem.Modules.Enrollments.Entities; 
+using SchoolManagementSystem.Modules.Enrollments.Dtos;
+
+namespace SchoolManagementSystem.Modules.Enrollments.Mappers
+{
+
+    public class EnrollmentMapper : Profile
+    {
+        public EnrollmentMapper()
+        {
+            CreateMap<Enrollment, EnrollmentDto>();
+
+            CreateMap<CreateEnrollmentDto, Enrollment>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.EnrollmentDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "Active"));
+
+            CreateMap<UpdateEnrollmentDto, Enrollment>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.StudentId, opt => opt.Ignore())
+                .ForMember(dest => dest.ClassId, opt => opt.Ignore())
+                .ForMember(dest => dest.EnrollmentDate, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));
+        }
+
+    }
+}
