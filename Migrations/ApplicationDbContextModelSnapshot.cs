@@ -47,11 +47,6 @@ namespace SchoolManagementSystem.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<int>("TeacherId")
                         .HasColumnType("integer");
 

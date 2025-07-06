@@ -61,7 +61,6 @@ namespace SchoolManagementSystem.Configurations
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.ClassName).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Subject).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Schedule).HasMaxLength(200);
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");

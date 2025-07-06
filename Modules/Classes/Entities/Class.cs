@@ -15,10 +15,6 @@ namespace SchoolManagementSystem.Modules.Classes.Entities
         public string ClassName { get; set; } = string.Empty; // e.g., "10A", "11B"
         
         [Required]
-        [StringLength(100)]
-        public string Subject { get; set; } = string.Empty; // Mata Pelajaran
-        
-        [Required]
         public int TeacherId { get; set; }
         
         [Range(1, 100)]
