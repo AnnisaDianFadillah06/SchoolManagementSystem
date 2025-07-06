@@ -3,6 +3,9 @@ using SchoolManagementSystem.Modules.Students.Repositories;
 using SchoolManagementSystem.Modules.Students.Services;
 using SchoolManagementSystem.Modules.Teachers.Repositories;
 using SchoolManagementSystem.Modules.Teachers.Services;
+using SchoolManagementSystem.Modules.Classes.Repositories;
+using SchoolManagementSystem.Modules.Classes.Services;
+using SchoolManagementSystem.Modules.Classes.Repositorie;
 
 namespace SchoolManagementSystem.Configurations
 {
@@ -20,6 +23,9 @@ namespace SchoolManagementSystem.Configurations
             // TODO: Register other services (Teacher, Class, Enrollment, etc.)
             services.AddScoped<ITeacherService, TeacherService>();
             services.AddScoped<ITeacherRepository, TeacherRepository>();
+
+            services.AddScoped<IClassService, ClassService>();
+            services.AddScoped<IClassRepository, ClassRepository>();
 
             return services;
         }

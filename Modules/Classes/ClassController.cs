@@ -1,0 +1,91 @@
+using Microsoft.AspNetCore.Mvc;
+using SchoolManagementSystem.Modules.Classes.Services;
+using SchoolManagementSystem.Modules.Classes.Dtos;
+using SchoolManagementSystem.Common.Requests; 
+using SchoolManagementSystem.Common.Responses;
+
+namespace SchoolManagementSystem.Modules.Classes
+{
+
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ClassController : ControllerBase
+    {
+        private readonly IClassService _classService;
+
+        public ClassController(IClassService classService)
+        {
+            _classService = classService;
+        }
+
+        /// <summary>
+        /// Get all classes with pagination
+        /// </summary>
+        [HttpGet]
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<ClassDto>>>> GetAllClasses(
+            [FromQuery] PaginationRequest request)
+        {
+            var response = await _classService.GetAllAsync(request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Get class by ID
+        /// </summary>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ApiResponse<ClassDto>>> GetClassById(int id)
+        {
+            var response = await _classService.GetByIdAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Create a new class
+        /// </summary>
+        [HttpPost]
+        public async Task<ActionResult<ApiResponse<ClassDto>>> CreateClass(
+            [FromBody] CreateClassDto createDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ApiResponse<ClassDto>.ErrorResponse(
+                    "Validation failed", 400, errors));
+            }
+
+            var response = await _classService.CreateAsync(createDto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Update an existing class
+        /// </summary>
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ApiResponse<ClassDto>>> UpdateClass(
+            int id, [FromBody] UpdateClassDto updateDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ApiResponse<ClassDto>.ErrorResponse(
+                    "Validation failed", 400, errors));
+            }
+
+            var response = await _classService.UpdateAsync(id, updateDto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Delete a class
+        /// </summary>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ApiResponse<bool>>> DeleteClass(int id)
+        {
+            var response = await _classService.DeleteAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+    }
+}

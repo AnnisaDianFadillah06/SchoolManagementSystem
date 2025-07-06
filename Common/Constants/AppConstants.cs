@@ -15,6 +15,11 @@ namespace SchoolManagementSystem.Common.Constants
             public const string TeacherCreated = "Teacher created successfully";
             public const string TeacherUpdated = "Teacher updated successfully";
             public const string TeacherDeleted = "Teacher deleted successfully";
+
+            public const string ClassNotFound = "Class not found";
+            public const string ClassCreated = "Class created successfully";
+            public const string ClassUpdated = "Class updated successfully";
+            public const string ClassDeleted = "Class deleted successfully";
         }
 
         public static class StatusCodes
