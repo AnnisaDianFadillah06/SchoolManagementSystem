@@ -136,3 +136,4 @@ D:\Semester5\Task2\SchoolManagementSystem\obj\Debug\net8.0\refint\SchoolManageme
 D:\Semester5\Task2\SchoolManagementSystem\obj\Debug\net8.0\SchoolManagementSystem.pdb
 D:\Semester5\Task2\SchoolManagementSystem\obj\Debug\net8.0\SchoolManagementSystem.genruntimeconfig.cache
 D:\Semester5\Task2\SchoolManagementSystem\obj\Debug\net8.0\ref\SchoolManagementSystem.dll
+D:\Semester5\Task2\SchoolManagementSystem\obj\Debug\net8.0\SchoolManagementSystem.sourcelink.json

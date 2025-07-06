@@ -5,6 +5,7 @@ namespace SchoolManagementSystem.Modules.Students.Dtos;
 public class StudentDto
 {
     public int Id { get; set; }
+    public string NISN { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string FullName => $"{FirstName} {LastName}";
@@ -14,10 +15,15 @@ public class StudentDto
     public string? Address { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public int TotalEnrollments { get; set; }
 }
 
 public class CreateStudentDto
 {
+    [Required]
+    [StringLength(20)]
+    public string NISN { get; set; } = string.Empty;
+    
     [Required]
     [StringLength(100)]
     public string FirstName { get; set; } = string.Empty;
@@ -43,6 +49,10 @@ public class CreateStudentDto
 
 public class UpdateStudentDto
 {
+    [Required]
+    [StringLength(20)]
+    public string NISN { get; set; } = string.Empty;
+    
     [Required]
     [StringLength(100)]
     public string FirstName { get; set; } = string.Empty;
