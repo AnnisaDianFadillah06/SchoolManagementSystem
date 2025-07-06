@@ -10,6 +10,11 @@ namespace SchoolManagementSystem.Common.Constants
             public const string StudentDeleted = "Student deleted successfully";
             public const string ValidationError = "Validation error occurred";
             public const string InternalError = "Internal server error occurred";
+
+            public const string TeacherNotFound = "Teacher not found";
+            public const string TeacherCreated = "Teacher created successfully";
+            public const string TeacherUpdated = "Teacher updated successfully";
+            public const string TeacherDeleted = "Teacher deleted successfully";
         }
 
         public static class StatusCodes

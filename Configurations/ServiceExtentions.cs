@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using SchoolManagementSystem.Modules.Students.Repositories;
 using SchoolManagementSystem.Modules.Students.Services;
+using SchoolManagementSystem.Modules.Teachers.Repositories;
+using SchoolManagementSystem.Modules.Teachers.Services;
 
 namespace SchoolManagementSystem.Configurations
 {
@@ -16,6 +18,8 @@ namespace SchoolManagementSystem.Configurations
             services.AddScoped<IStudentService, StudentService>();
 
             // TODO: Register other services (Teacher, Class, Enrollment, etc.)
+            services.AddScoped<ITeacherService, TeacherService>();
+            services.AddScoped<ITeacherRepository, TeacherRepository>();
 
             return services;
         }
