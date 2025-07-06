@@ -1,10 +1,12 @@
 using AutoMapper;
+using SchoolManagementSystem.Modules.Enrollments.Services;
 using SchoolManagementSystem.Modules.Enrollments.Repositories;
 using SchoolManagementSystem.Modules.Enrollments.Dtos;
 using SchoolManagementSystem.Modules.Enrollments.Entities;
 using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
 using SchoolManagementSystem.Common.Constants;
+using System.Collections.Generic;
 
 namespace SchoolManagementSystem.Modules.Enrollments.Services;
 
@@ -41,7 +43,49 @@ public class EnrollmentService : IEnrollmentService
         var paginatedResponse = PaginatedResponse<EnrollmentDto>.Create(
             enrollmentDtos, totalCount, request.Page, request.PageSize);
 
-        return ApiResponse<PaginatedResponse<EnrollmentDto>>.SuccessResponse(paginatedResponse);
+        return ApiResponse<PaginatedResponse<EnrollmentDto>>.SuccessResponse(
+            paginatedResponse,
+            AppConstants.Messages.EnrollmentRetrieved);
+    }
+
+    public async Task<ApiResponse<PaginatedResponse<EnrollmentDto>>> GetByStudentIdAsync(int studentId, PaginationRequest request)
+    {
+        if (!await _enrollmentRepository.StudentExistsAsync(studentId))
+        {
+            return ApiResponse<PaginatedResponse<EnrollmentDto>>.ErrorResponse(
+                "Student not found",
+                AppConstants.StatusCodes.NotFound);
+        }
+
+        var (enrollments, totalCount) = await _enrollmentRepository.GetByStudentIdAsync(studentId, request);
+        var enrollmentDtos = _mapper.Map<List<EnrollmentDto>>(enrollments);
+
+        var paginatedResponse = PaginatedResponse<EnrollmentDto>.Create(
+            enrollmentDtos, totalCount, request.Page, request.PageSize);
+
+        return ApiResponse<PaginatedResponse<EnrollmentDto>>.SuccessResponse(
+            paginatedResponse,
+            AppConstants.Messages.EnrollmentRetrieved);
+    }
+
+    public async Task<ApiResponse<PaginatedResponse<EnrollmentDto>>> GetByClassIdAsync(int classId, PaginationRequest request)
+    {
+        if (!await _enrollmentRepository.ClassExistsAsync(classId))
+        {
+            return ApiResponse<PaginatedResponse<EnrollmentDto>>.ErrorResponse(
+                "Class not found",
+                AppConstants.StatusCodes.NotFound);
+        }
+
+        var (enrollments, totalCount) = await _enrollmentRepository.GetByClassIdAsync(classId, request);
+        var enrollmentDtos = _mapper.Map<List<EnrollmentDto>>(enrollments);
+
+        var paginatedResponse = PaginatedResponse<EnrollmentDto>.Create(
+            enrollmentDtos, totalCount, request.Page, request.PageSize);
+
+        return ApiResponse<PaginatedResponse<EnrollmentDto>>.SuccessResponse(
+            paginatedResponse,
+            AppConstants.Messages.EnrollmentRetrieved);
     }
 
     public async Task<ApiResponse<EnrollmentDto>> CreateAsync(CreateEnrollmentDto createDto)
@@ -68,7 +112,7 @@ public class EnrollmentService : IEnrollmentService
             return ApiResponse<EnrollmentDto>.ErrorResponse(
                 "Student sudah terdaftar di kelas ini",
                 AppConstants.StatusCodes.BadRequest,
-                new List<string> { "Duplicate Enrollment" }); // Perbaikan: Gunakan List<string>
+                new List<string> { "Duplicate Enrollment" });
         }
 
         // Check if class has capacity

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SchoolManagementSystem.Modules.Enrollments.Services;
 using SchoolManagementSystem.Modules.Enrollments.Dtos;
-using SchoolManagementSystem.Common.Requests; 
+using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
 
 namespace SchoolManagementSystem.Modules.Enrollments
@@ -36,6 +36,28 @@ namespace SchoolManagementSystem.Modules.Enrollments
         public async Task<ActionResult<ApiResponse<EnrollmentDto>>> GetEnrollmentById(int id)
         {
             var response = await _enrollmentService.GetByIdAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Get all enrollments for a specific student
+        /// </summary>
+        [HttpGet("student/{studentId}")]
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<EnrollmentDto>>>> GetEnrollmentsByStudent(
+            int studentId, [FromQuery] PaginationRequest request)
+        {
+            var response = await _enrollmentService.GetByStudentIdAsync(studentId, request);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        /// <summary>
+        /// Get all enrollments for a specific class
+        /// </summary>
+        [HttpGet("class/{classId}")]
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<EnrollmentDto>>>> GetEnrollmentsByClass(
+            int classId, [FromQuery] PaginationRequest request)
+        {
+            var response = await _enrollmentService.GetByClassIdAsync(classId, request);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -86,6 +108,5 @@ namespace SchoolManagementSystem.Modules.Enrollments
             var response = await _enrollmentService.DeleteAsync(id);
             return StatusCode(response.StatusCode, response);
         }
-
     }
 }

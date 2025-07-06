@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using SchoolManagementSystem.Modules.Classes.Dtos;
+using SchoolManagementSystem.Modules.Students.Dtos;
 
 namespace SchoolManagementSystem.Modules.Enrollments.Dtos
 {
@@ -10,6 +12,8 @@ namespace SchoolManagementSystem.Modules.Enrollments.Dtos
         public int ClassId { get; set; }
         public DateTime EnrollmentDate { get; set; }
         public string Status { get; set; } = string.Empty; // Active, Inactive, Completed public StudentDto? Student { get; set; } public ClassDto? Class { get; set; } }
+        public StudentDto Student { get; set; } = null!;
+        public ClassDto Class { get; set; } = null!;
     }
     public class CreateEnrollmentDto
     {
