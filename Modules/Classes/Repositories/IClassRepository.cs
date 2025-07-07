@@ -3,7 +3,7 @@ using SchoolManagementSystem.Common.Requests;
 
 namespace SchoolManagementSystem.Modules.Classes.Repositories
 {
-   public interface IClassRepository
+    public interface IClassRepository
     {
         Task<Class?> GetByIdAsync(int id);
         Task<(List<Class> classes, int totalCount)> GetAllAsync(PaginationRequest request);
@@ -12,6 +12,8 @@ namespace SchoolManagementSystem.Modules.Classes.Repositories
         Task<bool> DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
         Task<bool> TeacherExistsAsync(int teacherId);
-        Task<bool> ClassNameExistsAsync(string className, int? excludeId = null); } 
+        Task<bool> ClassNameExistsAsync(string className, int? excludeId = null);
+        Task<bool> IsClassOwnedByTeacherAsync(int classId, int teacherId);
+    } 
 }
 

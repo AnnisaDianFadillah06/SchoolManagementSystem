@@ -2,8 +2,17 @@ namespace SchoolManagementSystem.Common.Constants
 {
     public static class AppConstants
     {
+        public static class Database
+        {
+            public const string CurrentTimestamp = "CURRENT_TIMESTAMP";
+        }
         public static class Messages
         {
+            public const string UserCreated = "User created successfully";
+            public const string Unauthorized = "Invalid credentials";
+            public const string UserAlreadyExistsForTeacher = "User Already Exists For Teacher";
+            public const string UserAlreadyExistsForStudent = "User Already Exists For Teacher";
+
             public const string StudentNotFound = "Student not found";
             public const string StudentCreated = "Student created successfully";
             public const string StudentUpdated = "Student updated successfully";
@@ -35,6 +44,8 @@ namespace SchoolManagementSystem.Common.Constants
             public const int BadRequest = 400;
             public const int NotFound = 404;
             public const int InternalError = 500;
+            public const int Unauthorized = 401;
+            public const int Forbidden = 403;
         }
     }
 }

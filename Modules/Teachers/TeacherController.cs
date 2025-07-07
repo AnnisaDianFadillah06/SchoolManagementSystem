@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using SchoolManagementSystem.Modules.Teachers.Services;
 using SchoolManagementSystem.Modules.Teachers.Dtos;
-using SchoolManagementSystem.Common.Requests; 
+using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
+using SchoolManagementSystem.Common.Attributes;
+using SchoolManagementSystem.Common.Helpers;
 
 namespace SchoolManagementSystem.Modules.Teachers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class TeacherController : ControllerBase
@@ -19,9 +20,10 @@ namespace SchoolManagementSystem.Modules.Teachers
         }
 
         /// <summary>
-        /// Get all teachers with pagination
+        /// Get all teachers with pagination - Admin only
         /// </summary>
         [HttpGet]
+        [RoleAuthorize(UserRoles.Admin)]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<TeacherDto>>>> GetAllTeachers(
             [FromQuery] PaginationRequest request)
         {
@@ -30,19 +32,30 @@ namespace SchoolManagementSystem.Modules.Teachers
         }
 
         /// <summary>
-        /// Get teacher by ID
+        /// Get teacher by ID - Admin or own teacher data
         /// </summary>
         [HttpGet("{id}")]
+        [RoleAuthorize(UserRoles.Admin, UserRoles.Teacher)]
         public async Task<ActionResult<ApiResponse<TeacherDto>>> GetTeacherById(int id)
         {
+            var userRole = UserContextHelper.GetUserRole(HttpContext);
+            var teacherId = UserContextHelper.GetTeacherId(HttpContext);
+
+            // Teacher can only access their own data
+            if (userRole == UserRoles.Teacher && teacherId != id)
+            {
+                return Forbid();
+            }
+
             var response = await _teacherService.GetByIdAsync(id);
             return StatusCode(response.StatusCode, response);
         }
 
         /// <summary>
-        /// Create a new teacher
+        /// Create a new teacher - Admin only
         /// </summary>
         [HttpPost]
+        [RoleAuthorize(UserRoles.Admin)]
         public async Task<ActionResult<ApiResponse<TeacherDto>>> CreateTeacher(
             [FromBody] CreateTeacherDto createDto)
         {
@@ -59,9 +72,10 @@ namespace SchoolManagementSystem.Modules.Teachers
         }
 
         /// <summary>
-        /// Update an existing teacher
+        /// Update an existing teacher - Admin only
         /// </summary>
         [HttpPut("{id}")]
+        [RoleAuthorize(UserRoles.Admin)]
         public async Task<ActionResult<ApiResponse<TeacherDto>>> UpdateTeacher(
             int id, [FromBody] UpdateTeacherDto updateDto)
         {
@@ -78,14 +92,14 @@ namespace SchoolManagementSystem.Modules.Teachers
         }
 
         /// <summary>
-        /// Delete a teacher
+        /// Delete a teacher - Admin only
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ApiResponse<bool>>> DeleteTeacher(int id)
+        [RoleAuthorize(UserRoles.Admin)]
+        public async Task<ActionResult<ApiResponse<TeacherDto>>> DeleteTeacher(int id)
         {
             var response = await _teacherService.DeleteAsync(id);
             return StatusCode(response.StatusCode, response);
         }
-
     }
 }

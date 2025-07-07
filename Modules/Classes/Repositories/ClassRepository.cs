@@ -124,6 +124,11 @@ namespace SchoolManagementSystem.Modules.Classes.Repositorie
 
             return await query.AnyAsync();
         }
+        public async Task<bool> IsClassOwnedByTeacherAsync(int classId, int teacherId)
+        {
+            return await _context.Classes
+                .AnyAsync(c => c.Id == classId && c.TeacherId == teacherId);
+        }
 
     }
 }

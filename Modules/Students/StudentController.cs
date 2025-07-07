@@ -3,6 +3,8 @@ using SchoolManagementSystem.Modules.Students.Services;
 using SchoolManagementSystem.Modules.Students.Dtos;
 using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
+using SchoolManagementSystem.Common.Attributes;
+using SchoolManagementSystem.Common.Helpers;
 
 namespace SchoolManagementSystem.Modules.Students
 {
@@ -18,9 +20,10 @@ namespace SchoolManagementSystem.Modules.Students
         }
 
         /// <summary>
-        /// Get all students with pagination
+        /// Get all students with pagination - Admin only
         /// </summary>
         [HttpGet]
+        [RoleAuthorize(UserRoles.Admin)]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<StudentDto>>>> GetAllStudents(
             [FromQuery] PaginationRequest request)
         {
@@ -29,19 +32,30 @@ namespace SchoolManagementSystem.Modules.Students
         }
 
         /// <summary>
-        /// Get student by ID
+        /// Get student by ID - Admin or own student data
         /// </summary>
         [HttpGet("{id}")]
+        [RoleAuthorize(UserRoles.Admin, UserRoles.Student)]
         public async Task<ActionResult<ApiResponse<StudentDto>>> GetStudentById(int id)
         {
+            var userRole = UserContextHelper.GetUserRole(HttpContext);
+            var studentId = UserContextHelper.GetStudentId(HttpContext);
+
+            // Student can only access their own data
+            if (userRole == UserRoles.Student && studentId != id)
+            {
+                return Forbid();
+            }
+
             var response = await _studentService.GetByIdAsync(id);
             return StatusCode(response.StatusCode, response);
         }
 
         /// <summary>
-        /// Create a new student
+        /// Create a new student - Admin only
         /// </summary>
         [HttpPost]
+        [RoleAuthorize(UserRoles.Admin)]
         public async Task<ActionResult<ApiResponse<StudentDto>>> CreateStudent(
             [FromBody] CreateStudentDto createDto)
         {
@@ -58,9 +72,10 @@ namespace SchoolManagementSystem.Modules.Students
         }
 
         /// <summary>
-        /// Update an existing student
+        /// Update an existing student - Admin only
         /// </summary>
         [HttpPut("{id}")]
+        [RoleAuthorize(UserRoles.Admin)]
         public async Task<ActionResult<ApiResponse<StudentDto>>> UpdateStudent(
             int id, [FromBody] UpdateStudentDto updateDto)
         {
@@ -77,10 +92,11 @@ namespace SchoolManagementSystem.Modules.Students
         }
 
         /// <summary>
-        /// Delete a student
+        /// Delete a student - Admin only
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ApiResponse<bool>>> DeleteStudent(int id)
+        [RoleAuthorize(UserRoles.Admin)]
+        public async Task<ActionResult<ApiResponse<StudentDto>>> DeleteStudent(int id)
         {
             var response = await _studentService.DeleteAsync(id);
             return StatusCode(response.StatusCode, response);

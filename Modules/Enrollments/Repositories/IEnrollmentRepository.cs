@@ -17,4 +17,5 @@ public interface IEnrollmentRepository
     Task<bool> StudentExistsAsync(int studentId);
     Task<bool> ClassExistsAsync(int classId);
     Task<bool> CanEnrollAsync(int classId);
+    Task<bool> IsClassOwnedByTeacherAsync(int classId, int teacherId);
 }

@@ -252,13 +252,22 @@ namespace SchoolManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ReferenceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RefreshTokenExpiry")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TeacherId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
@@ -275,7 +284,10 @@ namespace SchoolManagementSystem.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("ReferenceId")
+                    b.HasIndex("StudentId")
+                        .IsUnique();
+
+                    b.HasIndex("TeacherId")
                         .IsUnique();
 
                     b.HasIndex("Username")
@@ -318,12 +330,12 @@ namespace SchoolManagementSystem.Migrations
                 {
                     b.HasOne("SchoolManagementSystem.Modules.Students.Entities.Student", "Student")
                         .WithOne("User")
-                        .HasForeignKey("SchoolManagementSystem.Modules.Users.Entities.User", "ReferenceId")
+                        .HasForeignKey("SchoolManagementSystem.Modules.Users.Entities.User", "StudentId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("SchoolManagementSystem.Modules.Teachers.Entities.Teacher", "Teacher")
                         .WithOne("User")
-                        .HasForeignKey("SchoolManagementSystem.Modules.Users.Entities.User", "ReferenceId")
+                        .HasForeignKey("SchoolManagementSystem.Modules.Users.Entities.User", "TeacherId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Student");

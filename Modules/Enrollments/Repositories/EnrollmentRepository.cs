@@ -275,6 +275,13 @@ namespace SchoolManagementSystem.Modules.Enrollments.Repositories
 
             return classEntity.Enrollments.Count(e => e.Status == "Active") < classEntity.MaxStudents;
         }
+
+        public async Task<bool> IsClassOwnedByTeacherAsync(int classId, int teacherId)
+        {
+            var classEntity = await _context.Classes.FindAsync(classId);
+            return classEntity != null && classEntity.TeacherId == teacherId;
+        }
+
     }
 }
 

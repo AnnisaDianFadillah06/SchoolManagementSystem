@@ -188,4 +188,10 @@ public class EnrollmentService : IEnrollmentService
             enrollmentDto,
             AppConstants.Messages.EnrollmentDeleted);
     }
+
+    public async Task<bool> IsClassOwnedByTeacherAsync(int classId, int teacherId)
+    {
+        return await _enrollmentRepository.IsClassOwnedByTeacherAsync(classId, teacherId);
+    }
+
 }

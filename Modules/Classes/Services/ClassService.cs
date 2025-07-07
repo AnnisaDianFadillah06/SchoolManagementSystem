@@ -5,6 +5,7 @@ using SchoolManagementSystem.Modules.Classes.Entities;
 using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses; 
 using SchoolManagementSystem.Common.Constants;
+using SchoolManagementSystem.Common.Attributes;
 
 namespace SchoolManagementSystem.Modules.Classes.Services
 {
@@ -19,7 +20,7 @@ namespace SchoolManagementSystem.Modules.Classes.Services
             _mapper = mapper;
         }
 
-        public async Task<ApiResponse<ClassDto>> GetByIdAsync(int id)
+        public async Task<ApiResponse<ClassDto>> GetByIdAsync(int id, int? teacherId, int? studentId, string userRole)
         {
             var classEntity = await _classRepository.GetByIdAsync(id);
             if (classEntity == null)
@@ -27,6 +28,21 @@ namespace SchoolManagementSystem.Modules.Classes.Services
                 return ApiResponse<ClassDto>.ErrorResponse(
                     AppConstants.Messages.ClassNotFound,
                     AppConstants.StatusCodes.NotFound);
+            }
+
+            // Cek akses berdasarkan peran
+            if (userRole == UserRoles.Teacher && classEntity.TeacherId != teacherId)
+            {
+                return ApiResponse<ClassDto>.ErrorResponse(
+                    "Access denied: not your class.",
+                    AppConstants.StatusCodes.Forbidden);
+            }
+
+            if (userRole == UserRoles.Student && !classEntity.Enrollments.Any(e => e.StudentId == studentId))
+            {
+                return ApiResponse<ClassDto>.ErrorResponse(
+                    "Access denied: you are not enrolled in this class.",
+                    AppConstants.StatusCodes.Forbidden);
             }
 
             var classDto = _mapper.Map<ClassDto>(classEntity);
@@ -72,7 +88,7 @@ namespace SchoolManagementSystem.Modules.Classes.Services
                 AppConstants.StatusCodes.Created);
         }
 
-        public async Task<ApiResponse<ClassDto>> UpdateAsync(int id, UpdateClassDto updateDto)
+       public async Task<ApiResponse<ClassDto>> UpdateAsync(int id, UpdateClassDto updateDto, int? teacherId, string userRole)
         {
             var existingClass = await _classRepository.GetByIdAsync(id);
             if (existingClass == null)
@@ -82,7 +98,13 @@ namespace SchoolManagementSystem.Modules.Classes.Services
                     AppConstants.StatusCodes.NotFound);
             }
 
-            // Check if class name already exists (excluding current class)
+            if (userRole == UserRoles.Teacher && existingClass.TeacherId != teacherId)
+            {
+                return ApiResponse<ClassDto>.ErrorResponse(
+                    "Access denied: not your class.",
+                    AppConstants.StatusCodes.Forbidden);
+            }
+
             if (await _classRepository.ClassNameExistsAsync(updateDto.ClassName, id))
             {
                 return ApiResponse<ClassDto>.ErrorResponse(
@@ -90,7 +112,6 @@ namespace SchoolManagementSystem.Modules.Classes.Services
                     AppConstants.StatusCodes.BadRequest);
             }
 
-            // Check if teacher exists
             if (!await _classRepository.TeacherExistsAsync(updateDto.TeacherId))
             {
                 return ApiResponse<ClassDto>.ErrorResponse(

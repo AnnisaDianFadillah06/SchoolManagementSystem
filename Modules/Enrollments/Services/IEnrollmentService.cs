@@ -13,5 +13,6 @@ namespace SchoolManagementSystem.Modules.Enrollments.Services
         Task<ApiResponse<EnrollmentDto>> DeleteAsync(int id);
         Task<ApiResponse<PaginatedResponse<EnrollmentDto>>> GetByStudentIdAsync(int studentId, PaginationRequest request);
         Task<ApiResponse<PaginatedResponse<EnrollmentDto>>> GetByClassIdAsync(int classId, PaginationRequest request);
+        Task<bool> IsClassOwnedByTeacherAsync(int classId, int teacherId);
     }
 }
