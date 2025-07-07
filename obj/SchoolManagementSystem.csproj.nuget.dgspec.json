@@ -77,10 +77,6 @@
               "target": "Package",
               "version": "[7.1.2, )"
             },
-            "Microsoft.NET.Test.Sdk": {
-              "target": "Package",
-              "version": "[17.11.1, )"
-            },
             "Moq": {
               "target": "Package",
               "version": "[4.20.72, )"
