@@ -21,7 +21,9 @@ namespace SchoolManagementSystem.Modules.Users.Repositories
 
         public async Task<bool> ExistsAsync(string username, string email)
         {
-            return await _context.Users.AnyAsync(u => u.Username == username || u.Email == email);
+            return await _context.Users.AnyAsync(u => 
+                (!string.IsNullOrEmpty(username) && u.Username == username) || 
+                (!string.IsNullOrEmpty(email) && u.Email == email));
         }
 
         public async Task<User> CreateAsync(User user)
@@ -41,6 +43,26 @@ namespace SchoolManagementSystem.Modules.Users.Repositories
         public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken && u.IsActive);
+        }
+
+        public async Task<bool> UsernameExistsAsync(string username)
+        {
+            return await _context.Users.AnyAsync(u => u.Username == username);
+        }
+
+        public async Task<bool> EmailExistsAsync(string email)
+        {
+            return await _context.Users.AnyAsync(u => u.Email == email);
+        }
+
+        public async Task<bool> StudentIdExistsAsync(int studentId)
+        {
+            return await _context.Users.AnyAsync(u => u.StudentId == studentId);
+        }
+
+        public async Task<bool> TeacherIdExistsAsync(int teacherId)
+        {
+            return await _context.Users.AnyAsync(u => u.TeacherId == teacherId);
         }
     }
 }

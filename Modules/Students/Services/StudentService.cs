@@ -3,20 +3,25 @@ using SchoolManagementSystem.Modules.Students.Services;
 using SchoolManagementSystem.Modules.Students.Repositories;
 using SchoolManagementSystem.Modules.Students.Dtos;
 using SchoolManagementSystem.Modules.Students.Entities;
+using SchoolManagementSystem.Modules.Users.Repositories;
+using SchoolManagementSystem.Modules.Users.Entities;
 using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
 using SchoolManagementSystem.Common.Constants;
+using SchoolManagementSystem.Common.Attributes;
 
 namespace SchoolManagementSystem.Modules.Students.Services
 {
     public class StudentService : IStudentService
     {
         private readonly IStudentRepository _studentRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public StudentService(IStudentRepository studentRepository, IMapper mapper)
+        public StudentService(IStudentRepository studentRepository, IUserRepository userRepository, IMapper mapper)
         {
             _studentRepository = studentRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
 
@@ -55,13 +60,25 @@ namespace SchoolManagementSystem.Modules.Students.Services
                     AppConstants.StatusCodes.BadRequest);
             }
 
+            // Check if user with this email already exists
+            if (await _userRepository.ExistsAsync("", createDto.Email))
+            {
+                return ApiResponse<StudentDto>.ErrorResponse(
+                    "User with this email already exists", 
+                    AppConstants.StatusCodes.BadRequest);
+            }
+
             var student = _mapper.Map<Student>(createDto);
             var createdStudent = await _studentRepository.CreateAsync(student);
+
+            // Auto-create user account for the student
+            await CreateUserForStudentAsync(createdStudent);
+
             var studentDto = _mapper.Map<StudentDto>(createdStudent);
             
             return ApiResponse<StudentDto>.SuccessResponse(
                 studentDto, 
-                AppConstants.Messages.StudentCreated, 
+                "Student created successfully with default user account", 
                 AppConstants.StatusCodes.Created);
         }
 
@@ -105,6 +122,38 @@ namespace SchoolManagementSystem.Modules.Students.Services
             return ApiResponse<bool>.SuccessResponse(
                 result, 
                 AppConstants.Messages.StudentDeleted);
+        }
+
+        private async Task CreateUserForStudentAsync(Student student)
+        {
+            // Generate username from email (part before @)
+            var username = student.Email.Split('@')[0];
+            
+            // Ensure username is unique
+            var originalUsername = username;
+            int counter = 1;
+            while (await _userRepository.ExistsAsync(username, ""))
+            {
+                username = $"{originalUsername}{counter}";
+                counter++;
+            }
+
+            // Default password: "Student123!"
+            var defaultPassword = "Student123!";
+
+            var user = new User
+            {
+                Username = username,
+                Email = student.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(defaultPassword),
+                Role = UserRoles.Student,
+                StudentId = student.Id,
+                TeacherId = null, // Must be null for student
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _userRepository.CreateAsync(user);
         }
     }
 }

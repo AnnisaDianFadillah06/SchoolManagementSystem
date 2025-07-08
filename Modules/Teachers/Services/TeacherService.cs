@@ -2,19 +2,25 @@ using AutoMapper;
 using SchoolManagementSystem.Modules.Teachers.Repositories;
 using SchoolManagementSystem.Modules.Teachers.Dtos;
 using SchoolManagementSystem.Modules.Teachers.Entities;
+using SchoolManagementSystem.Modules.Users.Repositories;
+using SchoolManagementSystem.Modules.Users.Entities;
 using SchoolManagementSystem.Common.Requests;
-using SchoolManagementSystem.Common.Responses; 
+using SchoolManagementSystem.Common.Responses;
 using SchoolManagementSystem.Common.Constants;
+using SchoolManagementSystem.Common.Attributes;
 
 namespace SchoolManagementSystem.Modules.Teachers.Services
 {
     public class TeacherService : ITeacherService
     {
-        private readonly ITeacherRepository _teacherRepository; private readonly IMapper _mapper;
+        private readonly ITeacherRepository _teacherRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public TeacherService(ITeacherRepository teacherRepository, IMapper mapper)
+        public TeacherService(ITeacherRepository teacherRepository, IUserRepository userRepository, IMapper mapper)
         {
             _teacherRepository = teacherRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
 
@@ -61,13 +67,25 @@ namespace SchoolManagementSystem.Modules.Teachers.Services
                     AppConstants.StatusCodes.BadRequest);
             }
 
+            // Check if user with this email already exists
+            if (await _userRepository.ExistsAsync("", createDto.Email))
+            {
+                return ApiResponse<TeacherDto>.ErrorResponse(
+                    "User with this email already exists",
+                    AppConstants.StatusCodes.BadRequest);
+            }
+
             var teacher = _mapper.Map<Teacher>(createDto);
             var createdTeacher = await _teacherRepository.CreateAsync(teacher);
+
+            // Auto-create user account for the teacher
+            await CreateUserForTeacherAsync(createdTeacher);
+
             var teacherDto = _mapper.Map<TeacherDto>(createdTeacher);
 
             return ApiResponse<TeacherDto>.SuccessResponse(
                 teacherDto,
-                AppConstants.Messages.TeacherCreated,
+                "Teacher created successfully with default user account",
                 AppConstants.StatusCodes.Created);
         }
 
@@ -119,6 +137,38 @@ namespace SchoolManagementSystem.Modules.Teachers.Services
             return ApiResponse<bool>.SuccessResponse(
                 result,
                 AppConstants.Messages.TeacherDeleted);
+        }
+
+        private async Task CreateUserForTeacherAsync(Teacher teacher)
+        {
+            // Generate username from email (part before @)
+            var username = teacher.Email.Split('@')[0];
+            
+            // Ensure username is unique
+            var originalUsername = username;
+            int counter = 1;
+            while (await _userRepository.ExistsAsync(username, ""))
+            {
+                username = $"{originalUsername}{counter}";
+                counter++;
+            }
+
+            // Default password: "Teacher123!"
+            var defaultPassword = "Teacher123!";
+
+            var user = new User
+            {
+                Username = username,
+                Email = teacher.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(defaultPassword),
+                Role = UserRoles.Teacher,
+                StudentId = null, // Must be null for teacher
+                TeacherId = teacher.Id,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _userRepository.CreateAsync(user);
         }
     }
 }
