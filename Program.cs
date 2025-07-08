@@ -66,11 +66,19 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// listen port untuk Railway
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://*:{port}");
+
 // Configure the HTTP request pipeline
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseCors("AllowAll");
 app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
