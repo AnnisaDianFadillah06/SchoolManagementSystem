@@ -5,6 +5,7 @@ using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
 using SchoolManagementSystem.Common.Attributes;
 using SchoolManagementSystem.Common.Helpers;
+using SchoolManagementSystem.Common.Constants;
 
 namespace SchoolManagementSystem.Modules.Classes
 {
@@ -46,7 +47,6 @@ namespace SchoolManagementSystem.Modules.Classes
             return StatusCode(response.StatusCode, response);
         }
 
-
         /// <summary>
         /// Create a new class - Admin only
         /// </summary>
@@ -60,7 +60,9 @@ namespace SchoolManagementSystem.Modules.Classes
                 var errors = ModelState.Values.SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage).ToList();
                 return BadRequest(ApiResponse<ClassDto>.ErrorResponse(
-                    "Validation failed", 400, errors));
+                    AppConstants.Messages.ValidationError, 
+                    AppConstants.StatusCodes.BadRequest, 
+                    errors));
             }
 
             var response = await _classService.CreateAsync(createDto);
@@ -80,7 +82,9 @@ namespace SchoolManagementSystem.Modules.Classes
                 var errors = ModelState.Values.SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage).ToList();
                 return BadRequest(ApiResponse<ClassDto>.ErrorResponse(
-                    "Validation failed", 400, errors));
+                    AppConstants.Messages.ValidationError, 
+                    AppConstants.StatusCodes.BadRequest, 
+                    errors));
             }
 
             var userRole = UserContextHelper.GetUserRole(HttpContext);
@@ -89,7 +93,6 @@ namespace SchoolManagementSystem.Modules.Classes
             var response = await _classService.UpdateAsync(id, updateDto, teacherId, userRole);
             return StatusCode(response.StatusCode, response);
         }
-
 
         /// <summary>
         /// Delete a class - Admin only

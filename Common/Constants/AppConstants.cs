@@ -35,6 +35,12 @@ namespace SchoolManagementSystem.Common.Constants
             public const string EnrollmentUpdated = "Enrollment updated successfully";
             public const string EnrollmentDeleted = "Enrollment deleted successfully";
             public const string EnrollmentRetrieved = "Enrollments retrieved successfully";
+            public const string AccessDenied = "Access denied. You don't have permission to access this resource";
+            public const string StudentAccessDenied = "Access denied. Students can only access their own data";
+            public const string TeacherAccessDenied = "Access denied. Teachers can only access their own data or classes";
+            public const string ClassAccessDenied = "Access denied. You don't have permission to access this class";
+            public const string EnrollmentAccessDenied = "Access denied. You don't have permission to access this enrollment";
+            public const string TeacherNotAssigned = "Access denied. Teacher is not assigned to this class";
         }
 
         public static class StatusCodes

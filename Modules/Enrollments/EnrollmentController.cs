@@ -5,6 +5,7 @@ using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
 using SchoolManagementSystem.Common.Attributes;
 using SchoolManagementSystem.Common.Helpers;
+using SchoolManagementSystem.Common.Constants;
 using SchoolManagementSystem.Modules.Classes.Repositories;
 
 namespace SchoolManagementSystem.Modules.Enrollments
@@ -16,7 +17,6 @@ namespace SchoolManagementSystem.Modules.Enrollments
         private readonly IEnrollmentService _enrollmentService;
         private readonly IClassRepository _classRepository;
 
-
         public EnrollmentController(
             IEnrollmentService enrollmentService,
             IClassRepository classRepository)
@@ -24,7 +24,6 @@ namespace SchoolManagementSystem.Modules.Enrollments
             _enrollmentService = enrollmentService;
             _classRepository = classRepository;
         }
-
 
         /// <summary>
         /// Get all enrollments with pagination - Admin only
@@ -57,23 +56,36 @@ namespace SchoolManagementSystem.Modules.Enrollments
             {
                 var studentId = UserContextHelper.GetStudentId(HttpContext);
                 if (studentId != enrollment.StudentId)
-                    return Forbid();
+                {
+                    return StatusCode(AppConstants.StatusCodes.Forbidden, 
+                        ApiResponse<EnrollmentDto>.ErrorResponse(
+                            AppConstants.Messages.EnrollmentAccessDenied, 
+                            AppConstants.StatusCodes.Forbidden));
+                }
             }
             else if (userRole == UserRoles.Teacher)
             {
                 var teacherId = UserContextHelper.GetTeacherId(HttpContext);
                 if (teacherId == null)
-                    return Forbid();
+                {
+                    return StatusCode(AppConstants.StatusCodes.Forbidden, 
+                        ApiResponse<EnrollmentDto>.ErrorResponse(
+                            AppConstants.Messages.TeacherAccessDenied, 
+                            AppConstants.StatusCodes.Forbidden));
+                }
 
                 var isOwner = await _enrollmentService.IsClassOwnedByTeacherAsync(enrollment.ClassId, teacherId.Value);
                 if (!isOwner)
-                    return Forbid();
+                {
+                    return StatusCode(AppConstants.StatusCodes.Forbidden, 
+                        ApiResponse<EnrollmentDto>.ErrorResponse(
+                            AppConstants.Messages.TeacherNotAssigned, 
+                            AppConstants.StatusCodes.Forbidden));
+                }
             }
 
             return StatusCode(response.StatusCode, response);
         }
-
-
 
         /// <summary>
         /// Get all enrollments for a specific student - Admin, Student (own data)
@@ -89,7 +101,10 @@ namespace SchoolManagementSystem.Modules.Enrollments
             // Student can only access their own enrollments
             if (userRole == UserRoles.Student && currentStudentId != studentId)
             {
-                return Forbid();
+                return StatusCode(AppConstants.StatusCodes.Forbidden, 
+                    ApiResponse<PaginatedResponse<EnrollmentDto>>.ErrorResponse(
+                        AppConstants.Messages.StudentAccessDenied, 
+                        AppConstants.StatusCodes.Forbidden));
             }
 
             var response = await _enrollmentService.GetByStudentIdAsync(studentId, request);
@@ -111,12 +126,23 @@ namespace SchoolManagementSystem.Modules.Enrollments
             {
                 var teacherId = UserContextHelper.GetTeacherId(HttpContext);
                 if (teacherId == null)
-                    return Forbid();
+                {
+                    return StatusCode(AppConstants.StatusCodes.Forbidden, 
+                        ApiResponse<PaginatedResponse<EnrollmentDto>>.ErrorResponse(
+                            AppConstants.Messages.TeacherAccessDenied, 
+                            AppConstants.StatusCodes.Forbidden));
+                }
 
                 var isOwner = await _enrollmentService.IsClassOwnedByTeacherAsync(classId, teacherId.Value);
                 if (!isOwner)
-                    return Forbid();
+                {
+                    return StatusCode(AppConstants.StatusCodes.Forbidden, 
+                        ApiResponse<PaginatedResponse<EnrollmentDto>>.ErrorResponse(
+                            AppConstants.Messages.TeacherNotAssigned, 
+                            AppConstants.StatusCodes.Forbidden));
+                }
             }
+            
             var response = await _enrollmentService.GetByClassIdAsync(classId, request);
             return StatusCode(response.StatusCode, response);
         }
@@ -134,7 +160,9 @@ namespace SchoolManagementSystem.Modules.Enrollments
                 var errors = ModelState.Values.SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage).ToList();
                 return BadRequest(ApiResponse<EnrollmentDto>.ErrorResponse(
-                    "Validation failed", 400, errors));
+                    AppConstants.Messages.ValidationError, 
+                    AppConstants.StatusCodes.BadRequest, 
+                    errors));
             }
 
             var userRole = UserContextHelper.GetUserRole(HttpContext);
@@ -143,17 +171,26 @@ namespace SchoolManagementSystem.Modules.Enrollments
             {
                 var teacherId = UserContextHelper.GetTeacherId(HttpContext);
                 if (teacherId == null)
-                    return Forbid();
+                {
+                    return StatusCode(AppConstants.StatusCodes.Forbidden, 
+                        ApiResponse<EnrollmentDto>.ErrorResponse(
+                            AppConstants.Messages.TeacherAccessDenied, 
+                            AppConstants.StatusCodes.Forbidden));
+                }
 
                 var isTeaching = await _classRepository.IsClassOwnedByTeacherAsync(createDto.ClassId, teacherId.Value);
                 if (!isTeaching)
-                    return Forbid(); // atau Unauthorized()
+                {
+                    return StatusCode(AppConstants.StatusCodes.Forbidden, 
+                        ApiResponse<EnrollmentDto>.ErrorResponse(
+                            AppConstants.Messages.TeacherNotAssigned, 
+                            AppConstants.StatusCodes.Forbidden));
+                }
             }
 
             var response = await _enrollmentService.CreateAsync(createDto);
             return StatusCode(response.StatusCode, response);
         }
-
 
         /// <summary>
         /// Update an existing enrollment - Admin only
@@ -168,7 +205,9 @@ namespace SchoolManagementSystem.Modules.Enrollments
                 var errors = ModelState.Values.SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage).ToList();
                 return BadRequest(ApiResponse<EnrollmentDto>.ErrorResponse(
-                    "Validation failed", 400, errors));
+                    AppConstants.Messages.ValidationError, 
+                    AppConstants.StatusCodes.BadRequest, 
+                    errors));
             }
 
             var response = await _enrollmentService.UpdateAsync(id, updateDto);

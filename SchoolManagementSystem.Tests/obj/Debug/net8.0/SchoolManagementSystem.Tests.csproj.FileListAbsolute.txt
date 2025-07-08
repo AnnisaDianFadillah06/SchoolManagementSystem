@@ -140,3 +140,12 @@ D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\obj\Debug
 D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\obj\Debug\net8.0\SchoolManagementSystem.Tests.pdb
 D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\obj\Debug\net8.0\SchoolManagementSystem.Tests.genruntimeconfig.cache
 D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\obj\Debug\net8.0\ref\SchoolManagementSystem.Tests.dll
+D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\bin\Debug\net8.0\appsettings.Development.json
+D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\bin\Debug\net8.0\appsettings.json
+D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.deps.json
+D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.runtimeconfig.json
+D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests.deps.json
+D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests.runtimeconfig.json
+D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\obj\project.assets.json
+D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\obj\SchoolManagementSystem.Tests.csproj.nuget.dgspec.json
+D:\Semester5\Task2\SchoolManagementSystem\SchoolManagementSystem.Tests\bin\Debug\net8.0\SchoolManagementSystem.Tests\obj\Debug\net8.0\SchoolManagementSystem.Tests.sourcelink.json

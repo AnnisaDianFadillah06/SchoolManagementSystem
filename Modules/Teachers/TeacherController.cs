@@ -5,6 +5,7 @@ using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
 using SchoolManagementSystem.Common.Attributes;
 using SchoolManagementSystem.Common.Helpers;
+using SchoolManagementSystem.Common.Constants;
 
 namespace SchoolManagementSystem.Modules.Teachers
 {
@@ -44,7 +45,10 @@ namespace SchoolManagementSystem.Modules.Teachers
             // Teacher can only access their own data
             if (userRole == UserRoles.Teacher && teacherId != id)
             {
-                return Forbid();
+                return StatusCode(AppConstants.StatusCodes.Forbidden, 
+                    ApiResponse<TeacherDto>.ErrorResponse(
+                        AppConstants.Messages.TeacherAccessDenied, 
+                        AppConstants.StatusCodes.Forbidden));
             }
 
             var response = await _teacherService.GetByIdAsync(id);
@@ -64,7 +68,9 @@ namespace SchoolManagementSystem.Modules.Teachers
                 var errors = ModelState.Values.SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage).ToList();
                 return BadRequest(ApiResponse<TeacherDto>.ErrorResponse(
-                    "Validation failed", 400, errors));
+                    AppConstants.Messages.ValidationError, 
+                    AppConstants.StatusCodes.BadRequest, 
+                    errors));
             }
 
             var response = await _teacherService.CreateAsync(createDto);
@@ -84,7 +90,9 @@ namespace SchoolManagementSystem.Modules.Teachers
                 var errors = ModelState.Values.SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage).ToList();
                 return BadRequest(ApiResponse<TeacherDto>.ErrorResponse(
-                    "Validation failed", 400, errors));
+                    AppConstants.Messages.ValidationError, 
+                    AppConstants.StatusCodes.BadRequest, 
+                    errors));
             }
 
             var response = await _teacherService.UpdateAsync(id, updateDto);
