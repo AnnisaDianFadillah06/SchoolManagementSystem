@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SchoolManagementSystem.Configurations;
 using Microsoft.OpenApi.Models;
 using SchoolManagementSystem.Middlewares;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,6 +64,12 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
+builder.Services.AddSwaggerGen(c =>
+{
+    c.ExampleFilters();// ← Tambahkan ini
+});
+
+builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
 var app = builder.Build();
 

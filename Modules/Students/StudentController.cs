@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using SchoolManagementSystem.Modules.Students.Services;
 using SchoolManagementSystem.Modules.Students.Dtos;
+using SchoolManagementSystem.Modules.Students.Examples;
 using SchoolManagementSystem.Common.Requests;
 using SchoolManagementSystem.Common.Responses;
 using SchoolManagementSystem.Common.Attributes;
 using SchoolManagementSystem.Common.Helpers;
 using SchoolManagementSystem.Common.Constants;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace SchoolManagementSystem.Modules.Students
 {
@@ -82,6 +84,7 @@ namespace SchoolManagementSystem.Modules.Students
         /// </summary>
         [HttpPut("{id}")]
         [RoleAuthorize(UserRoles.Admin)]
+        [SwaggerRequestExample(typeof(UpdateStudentDto), typeof(UpdateStudentDtoExample))]
         public async Task<ActionResult<ApiResponse<StudentDto>>> UpdateStudent(
             int id, [FromBody] UpdateStudentDto updateDto)
         {
@@ -90,8 +93,8 @@ namespace SchoolManagementSystem.Modules.Students
                 var errors = ModelState.Values.SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage).ToList();
                 return BadRequest(ApiResponse<StudentDto>.ErrorResponse(
-                    AppConstants.Messages.ValidationError, 
-                    AppConstants.StatusCodes.BadRequest, 
+                    AppConstants.Messages.ValidationError,
+                    AppConstants.StatusCodes.BadRequest,
                     errors));
             }
 

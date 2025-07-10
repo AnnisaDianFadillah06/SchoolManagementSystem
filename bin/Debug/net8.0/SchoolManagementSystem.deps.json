@@ -19,6 +19,8 @@
           "Moq": "4.20.72",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4",
           "Swashbuckle.AspNetCore": "9.0.1",
+          "Swashbuckle.AspNetCore.Annotations": "9.0.1",
+          "Swashbuckle.AspNetCore.Filters": "9.0.0",
           "System.IdentityModel.Tokens.Jwt": "7.1.2",
           "xunit": "2.9.2"
         },
@@ -802,6 +804,18 @@
       "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
       "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
       "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {},
+      "Scrutor/3.3.0": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.6",
+          "Microsoft.Extensions.DependencyModel": "9.0.6"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Scrutor.dll": {
+            "assemblyVersion": "3.0.2.0",
+            "fileVersion": "3.0.2.0"
+          }
+        }
+      },
       "Sprache/2.3.1": {
         "dependencies": {
           "System.Globalization": "4.3.0",
@@ -823,6 +837,38 @@
           "Swashbuckle.AspNetCore.Swagger": "9.0.1",
           "Swashbuckle.AspNetCore.SwaggerGen": "9.0.1",
           "Swashbuckle.AspNetCore.SwaggerUI": "9.0.1"
+        }
+      },
+      "Swashbuckle.AspNetCore.Annotations/9.0.1": {
+        "dependencies": {
+          "Swashbuckle.AspNetCore.SwaggerGen": "9.0.1"
+        },
+        "runtime": {
+          "lib/net8.0/Swashbuckle.AspNetCore.Annotations.dll": {
+            "assemblyVersion": "9.0.1.0",
+            "fileVersion": "9.0.1.1541"
+          }
+        }
+      },
+      "Swashbuckle.AspNetCore.Filters/9.0.0": {
+        "dependencies": {
+          "Scrutor": "3.3.0",
+          "Swashbuckle.AspNetCore.Filters.Abstractions": "9.0.0",
+          "Swashbuckle.AspNetCore.SwaggerGen": "9.0.1"
+        },
+        "runtime": {
+          "lib/net8.0/Swashbuckle.AspNetCore.Filters.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.0.0"
+          }
+        }
+      },
+      "Swashbuckle.AspNetCore.Filters.Abstractions/9.0.0": {
+        "runtime": {
+          "lib/net8.0/Swashbuckle.AspNetCore.Filters.Abstractions.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.0.0"
+          }
         }
       },
       "Swashbuckle.AspNetCore.Swagger/9.0.1": {
@@ -2054,6 +2100,13 @@
       "path": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl/4.3.2",
       "hashPath": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512"
     },
+    "Scrutor/3.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-BwqCnFzp2/Z+pq17iztxlIkR/ZANyPRR4PdE57WL1w/JW4AM/2imoxBWTL3+G+YXA46ce4s9OUgwWqTXYrtI8A==",
+      "path": "scrutor/3.3.0",
+      "hashPath": "scrutor.3.3.0.nupkg.sha512"
+    },
     "Sprache/2.3.1": {
       "type": "package",
       "serviceable": true,
@@ -2067,6 +2120,27 @@
       "sha512": "sha512-lmaz0juKGq8VgeCOki98OUVdEH7rvgBST0QrlWXNOxBl7ujNWyqdqj2SMAdgpQfTtBlSQUTHRslRM+0j7El5tA==",
       "path": "swashbuckle.aspnetcore/9.0.1",
       "hashPath": "swashbuckle.aspnetcore.9.0.1.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore.Annotations/9.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-TANd+yRHl99IPUWGcifwP+FbK48Lx7rrTqd21z/7GaduUdiKFF7/uUs85dC8Tdll70erb2s1eDsvItnt83Qz2A==",
+      "path": "swashbuckle.aspnetcore.annotations/9.0.1",
+      "hashPath": "swashbuckle.aspnetcore.annotations.9.0.1.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore.Filters/9.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fa5Qf428JK1YsMv4WDSpB/JL17Ehb3bGomZjtjx8QamLtNh+9GYARxJEvMXoV9POlteE1Px3sczS4a3lEgckCw==",
+      "path": "swashbuckle.aspnetcore.filters/9.0.0",
+      "hashPath": "swashbuckle.aspnetcore.filters.9.0.0.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore.Filters.Abstractions/9.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ViWDoSdM8R5oN/fQMIqXFwJgleuVLrr+/Qm228n8f3bviWbo0EZe0z/+2oLkYurwFmSVc0fNKNAUXj4j6sXQIQ==",
+      "path": "swashbuckle.aspnetcore.filters.abstractions/9.0.0",
+      "hashPath": "swashbuckle.aspnetcore.filters.abstractions.9.0.0.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore.Swagger/9.0.1": {
       "type": "package",
