@@ -4,6 +4,25 @@ Selamat datang di proyek **School Management System**!
 Ini adalah REST API backend yang dibangun dengan **.NET 8** dan **PostgreSQL** menggunakan **Supabase** sebagai penyedia database. Sistem ini dirancang untuk mengelola data siswa, guru, kelas, dan pendaftaran dengan kode yang terstruktur, modular, dan mengikuti praktik terbaik. Proyek ini dilengkapi dengan dokumentasi API interaktif via **Swagger** dan menggunakan file `.env` untuk konfigurasi lingkungan.
 
 ---
+## 🌐 Demo Online
+
+Aplikasi telah dideploy dan dapat diakses melalui:
+**https://schoolmanagementsystem-production-d53f.up.railway.app/swagger**
+
+### Akun Demo untuk Testing:
+- **Admin**
+  - Username: `admin`
+  - Password: `string`
+  
+- **Student**
+  - Username: `annisa.dian`
+  - Password: `Student123!`
+  
+- **Teacher**
+  - Username: `hendra.wijaya`
+  - Password: `Teacher123!`
+
+---
 
 ## 📚 Fitur Utama
 
@@ -27,7 +46,9 @@ Ini adalah REST API backend yang dibangun dengan **.NET 8** dan **PostgreSQL** m
 5. **Autentikasi & Otorisasi**
    - Manajemen peran pengguna berbasis JWT: **Admin**, **Teacher**, **Student**.
    - Admin memiliki akses penuh, Teacher hanya ke kelas yang diajar, dan Student hanya ke data pendaftarannya.
-
+     
+6. **Pagination**
+   - Semua endpoint `GET` untuk daftar data (students, teachers, classes, enrollments) dilengkapi dengan sistem pagination untuk performa optimal.
 ---
 
 ## 🖼️ Tampilan Dokumentasi
@@ -107,8 +128,8 @@ Ini adalah REST API backend yang dibangun dengan **.NET 8** dan **PostgreSQL** m
    ```bash
    dotnet run
    ```
-   Aplikasi akan berjalan di [http://localhost:5141](http://localhost:5141).  
-   **Swagger UI**: Buka [http://localhost:5141/swagger](http://localhost:5141/swagger) untuk dokumentasi API.
+   Aplikasi akan berjalan di [http://localhost:5141](http://localhost:8080).  
+   **Swagger UI**: Buka [http://localhost:8080/swagger](http://localhost:8080/swagger) untuk dokumentasi API.
 
 ---
 
