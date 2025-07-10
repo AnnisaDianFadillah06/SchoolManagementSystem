@@ -6,7 +6,7 @@ using SchoolManagementSystem.Modules.Users.Services;
 namespace SchoolManagementSystem.Modules.Users.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/user")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;

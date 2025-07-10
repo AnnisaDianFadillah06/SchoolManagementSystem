@@ -12,7 +12,7 @@ using Swashbuckle.AspNetCore.Filters;
 namespace SchoolManagementSystem.Modules.Students
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/student")]
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;

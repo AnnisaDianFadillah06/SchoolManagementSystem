@@ -10,7 +10,7 @@ using SchoolManagementSystem.Common.Constants;
 namespace SchoolManagementSystem.Modules.Classes
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/class")]
     public class ClassController : ControllerBase
     {
         private readonly IClassService _classService;

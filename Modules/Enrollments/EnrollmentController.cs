@@ -11,7 +11,7 @@ using SchoolManagementSystem.Modules.Classes.Repositories;
 namespace SchoolManagementSystem.Modules.Enrollments
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/enrollment")]
     public class EnrollmentController : ControllerBase
     {
         private readonly IEnrollmentService _enrollmentService;
