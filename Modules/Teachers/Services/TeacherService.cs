@@ -89,7 +89,7 @@ namespace SchoolManagementSystem.Modules.Teachers.Services
                 AppConstants.StatusCodes.Created);
         }
 
-        public async Task<ApiResponse<TeacherDto>> UpdateAsync(int id, UpdateTeacherDto updateDto)
+        public async Task<ApiResponse<TeacherDto>> PatchAsync(int id, PatchTeacherDto patchDto)
         {
             var existingTeacher = await _teacherRepository.GetByIdAsync(id);
             if (existingTeacher == null)
@@ -99,28 +99,38 @@ namespace SchoolManagementSystem.Modules.Teachers.Services
                     AppConstants.StatusCodes.NotFound);
             }
 
-            // Check if email already exists (excluding current teacher)
-            if (await _teacherRepository.EmailExistsAsync(updateDto.Email, id))
+            if (!string.IsNullOrWhiteSpace(patchDto.Email) &&
+                await _teacherRepository.EmailExistsAsync(patchDto.Email, id))
             {
                 return ApiResponse<TeacherDto>.ErrorResponse(
                     "Email already exists",
                     AppConstants.StatusCodes.BadRequest);
             }
 
-            // Check if NIP already exists (excluding current teacher)
-            if (await _teacherRepository.NIPExistsAsync(updateDto.NIP, id))
+            if (!string.IsNullOrWhiteSpace(patchDto.NIP) &&
+                await _teacherRepository.NIPExistsAsync(patchDto.NIP, id))
             {
                 return ApiResponse<TeacherDto>.ErrorResponse(
                     "NIP already exists",
                     AppConstants.StatusCodes.BadRequest);
             }
 
-            _mapper.Map(updateDto, existingTeacher);
-            var updatedTeacher = await _teacherRepository.UpdateAsync(existingTeacher);
-            var teacherDto = _mapper.Map<TeacherDto>(updatedTeacher);
+            // Manual update (partial)
+            if (!string.IsNullOrWhiteSpace(patchDto.NIP)) existingTeacher.NIP = patchDto.NIP;
+            if (!string.IsNullOrWhiteSpace(patchDto.FirstName)) existingTeacher.FirstName = patchDto.FirstName;
+            if (!string.IsNullOrWhiteSpace(patchDto.LastName)) existingTeacher.LastName = patchDto.LastName;
+            if (!string.IsNullOrWhiteSpace(patchDto.Email)) existingTeacher.Email = patchDto.Email;
+            if (!string.IsNullOrWhiteSpace(patchDto.Phone)) existingTeacher.Phone = patchDto.Phone;
+            if (!string.IsNullOrWhiteSpace(patchDto.Subject)) existingTeacher.Subject = patchDto.Subject;
+            if (!string.IsNullOrWhiteSpace(patchDto.Qualification)) existingTeacher.Qualification = patchDto.Qualification;
+
+            existingTeacher.UpdatedAt = DateTime.UtcNow;
+
+            var updated = await _teacherRepository.PatchAsync(existingTeacher);
+            var dto = _mapper.Map<TeacherDto>(updated);
 
             return ApiResponse<TeacherDto>.SuccessResponse(
-                teacherDto,
+                dto,
                 AppConstants.Messages.TeacherUpdated);
         }
 

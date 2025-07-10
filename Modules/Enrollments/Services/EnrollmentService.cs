@@ -1,6 +1,8 @@
 using AutoMapper;
 using SchoolManagementSystem.Modules.Enrollments.Services;
 using SchoolManagementSystem.Modules.Enrollments.Repositories;
+using SchoolManagementSystem.Modules.Classes.Repositories;
+using SchoolManagementSystem.Modules.Students.Repositories;
 using SchoolManagementSystem.Modules.Enrollments.Dtos;
 using SchoolManagementSystem.Modules.Enrollments.Entities;
 using SchoolManagementSystem.Common.Requests;
@@ -14,12 +16,22 @@ public class EnrollmentService : IEnrollmentService
 {
     private readonly IEnrollmentRepository _enrollmentRepository;
     private readonly IMapper _mapper;
+    private readonly IClassRepository _classRepository;
+    private readonly IStudentRepository _studentRepository;
 
-    public EnrollmentService(IEnrollmentRepository enrollmentRepository, IMapper mapper)
+
+    public EnrollmentService(
+        IEnrollmentRepository enrollmentRepository,
+        IMapper mapper,
+        IClassRepository classRepository,
+        IStudentRepository studentRepository)
     {
         _enrollmentRepository = enrollmentRepository;
         _mapper = mapper;
+        _classRepository = classRepository;
+        _studentRepository = studentRepository;
     }
+
 
     public async Task<ApiResponse<EnrollmentDto>> GetByIdAsync(int id)
     {
@@ -133,7 +145,7 @@ public class EnrollmentService : IEnrollmentService
             AppConstants.StatusCodes.Created);
     }
 
-    public async Task<ApiResponse<EnrollmentDto>> UpdateAsync(int id, UpdateEnrollmentDto updateDto)
+    public async Task<ApiResponse<EnrollmentDto>> PatchAsync(int id, PatchEnrollmentDto patchDto)
     {
         var existingEnrollment = await _enrollmentRepository.GetByIdAsync(id);
         if (existingEnrollment == null)
@@ -145,30 +157,60 @@ public class EnrollmentService : IEnrollmentService
 
         // Validate status
         var validStatuses = new[] { "Active", "Inactive", "Completed" };
-        if (!validStatuses.Contains(updateDto.Status))
+        if (!validStatuses.Contains(patchDto.Status))
         {
             return ApiResponse<EnrollmentDto>.ErrorResponse(
                 "Invalid status value",
                 AppConstants.StatusCodes.BadRequest);
         }
 
-        // Check class capacity if changing to Active
-        if (updateDto.Status == "Active" && existingEnrollment.Status != "Active")
+        bool isChangingClass = patchDto.ClassId.HasValue && patchDto.ClassId != existingEnrollment.ClassId;
+        bool isChangingStudent = patchDto.StudentId.HasValue && patchDto.StudentId != existingEnrollment.StudentId;
+
+        if (isChangingClass)
         {
-            if (!await _enrollmentRepository.CanEnrollAsync(existingEnrollment.ClassId))
+            var newClassId = patchDto.ClassId.Value;
+            if (!await _classRepository.ExistsAsync(newClassId))
             {
                 return ApiResponse<EnrollmentDto>.ErrorResponse(
-                    "Class has reached maximum capacity",
+                    "Class not found",
                     AppConstants.StatusCodes.BadRequest);
             }
+
+            if (patchDto.Status == "Active")
+            {
+                if (!await _enrollmentRepository.CanEnrollAsync(newClassId))
+                {
+                    return ApiResponse<EnrollmentDto>.ErrorResponse(
+                        "Class has reached maximum capacity",
+                        AppConstants.StatusCodes.BadRequest);
+                }
+            }
+
+            existingEnrollment.ClassId = newClassId;
         }
 
-        _mapper.Map(updateDto, existingEnrollment);
-        var updatedEnrollment = await _enrollmentRepository.UpdateAsync(existingEnrollment);
-        var enrollmentDto = _mapper.Map<EnrollmentDto>(updatedEnrollment);
+        if (isChangingStudent)
+        {
+            var newStudentId = patchDto.StudentId.Value;
+            if (!await _studentRepository.ExistsAsync(newStudentId))
+            {
+                return ApiResponse<EnrollmentDto>.ErrorResponse(
+                    "Student not found",
+                    AppConstants.StatusCodes.BadRequest);
+            }
+
+            existingEnrollment.StudentId = newStudentId;
+        }
+
+        existingEnrollment.Status = patchDto.Status;
+        existingEnrollment.UpdatedAt = DateTime.UtcNow;
+
+        var updated = await _enrollmentRepository.PatchAsync(existingEnrollment);
+        var dto = _mapper.Map<EnrollmentDto>(updated);
 
         return ApiResponse<EnrollmentDto>.SuccessResponse(
-            enrollmentDto,
+            dto,
             AppConstants.Messages.EnrollmentUpdated);
     }
 

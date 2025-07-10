@@ -33,20 +33,18 @@ namespace SchoolManagementSystem.Modules.Classes.Dtos
 
     }
 
-    public class UpdateClassDto
+    public class PatchClassDto
     {
-        [Required]
         [StringLength(50)]
-        public string ClassName { get; set; } = string.Empty;
+        public string? ClassName { get; set; }
 
-        [Required]
-        public int TeacherId { get; set; }
+        public int? TeacherId { get; set; }
 
         [Range(1, 100)]
-        public int MaxStudents { get; set; } = 30;
+        public int? MaxStudents { get; set; }
 
         [StringLength(200)]
         public string? Schedule { get; set; }
-
     }
+
 }

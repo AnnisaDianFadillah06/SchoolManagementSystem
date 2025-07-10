@@ -2,12 +2,11 @@ using Swashbuckle.AspNetCore.Filters;
 using SchoolManagementSystem.Modules.Students.Dtos;
 
 namespace SchoolManagementSystem.Modules.Students.Examples;
-
-public class UpdateStudentDtoExample : IExamplesProvider<UpdateStudentDto>
+public class PatchStudentDtoExample : IExamplesProvider<PatchStudentDto>
 {
-    public UpdateStudentDto GetExamples()
+    public PatchStudentDto GetExamples()
     {
-        return new UpdateStudentDto
+        return new PatchStudentDto
         {
             NISN = "1234567890",
             FirstName = "Budi",

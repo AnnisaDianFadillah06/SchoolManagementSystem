@@ -9,7 +9,7 @@ namespace SchoolManagementSystem.Modules.Students.Services
         Task<ApiResponse<StudentDto>> GetByIdAsync(int id);
         Task<ApiResponse<PaginatedResponse<StudentDto>>> GetAllAsync(PaginationRequest request);
         Task<ApiResponse<StudentDto>> CreateAsync(CreateStudentDto createDto);
-        Task<ApiResponse<StudentDto>> UpdateAsync(int id, UpdateStudentDto updateDto);
+        Task<ApiResponse<StudentDto>> PatchAsync(int id, PatchStudentDto patchDto);
         Task<ApiResponse<bool>> DeleteAsync(int id);
     }
 }

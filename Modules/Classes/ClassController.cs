@@ -72,10 +72,10 @@ namespace SchoolManagementSystem.Modules.Classes
         /// <summary>
         /// Update an existing class - Admin and Teacher (own class)
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         [RoleAuthorize(UserRoles.Admin, UserRoles.Teacher)]
-        public async Task<ActionResult<ApiResponse<ClassDto>>> UpdateClass(
-            int id, [FromBody] UpdateClassDto updateDto)
+        public async Task<ActionResult<ApiResponse<ClassDto>>> PatchClass(
+            int id, [FromBody] PatchClassDto patchDto)
         {
             if (!ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace SchoolManagementSystem.Modules.Classes
             var userRole = UserContextHelper.GetUserRole(HttpContext);
             var teacherId = UserContextHelper.GetTeacherId(HttpContext);
 
-            var response = await _classService.UpdateAsync(id, updateDto, teacherId, userRole);
+            var response = await _classService.PatchAsync(id, patchDto, teacherId, userRole);
             return StatusCode(response.StatusCode, response);
         }
 

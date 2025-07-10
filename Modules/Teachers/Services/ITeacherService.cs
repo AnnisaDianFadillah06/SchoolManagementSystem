@@ -8,6 +8,6 @@ namespace SchoolManagementSystem.Modules.Teachers.Services
         Task<ApiResponse<TeacherDto>> GetByIdAsync(int id);
         Task<ApiResponse<PaginatedResponse<TeacherDto>>> GetAllAsync(PaginationRequest request);
         Task<ApiResponse<TeacherDto>> CreateAsync(CreateTeacherDto createDto);
-        Task<ApiResponse<TeacherDto>> UpdateAsync(int id, UpdateTeacherDto updateDto);
+        Task<ApiResponse<TeacherDto>> PatchAsync(int id, PatchTeacherDto updateDto);
         Task<ApiResponse<bool>> DeleteAsync(int id); }
 }

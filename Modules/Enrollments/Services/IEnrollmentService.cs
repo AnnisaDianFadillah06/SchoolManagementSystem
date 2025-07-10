@@ -9,7 +9,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Services
         Task<ApiResponse<EnrollmentDto>> GetByIdAsync(int id);
         Task<ApiResponse<PaginatedResponse<EnrollmentDto>>> GetAllAsync(PaginationRequest request);
         Task<ApiResponse<EnrollmentDto>> CreateAsync(CreateEnrollmentDto createDto);
-        Task<ApiResponse<EnrollmentDto>> UpdateAsync(int id, UpdateEnrollmentDto updateDto);
+        Task<ApiResponse<EnrollmentDto>> PatchAsync(int id, PatchEnrollmentDto patchDto);
         Task<ApiResponse<EnrollmentDto>> DeleteAsync(int id);
         Task<ApiResponse<PaginatedResponse<EnrollmentDto>>> GetByStudentIdAsync(int studentId, PaginationRequest request);
         Task<ApiResponse<PaginatedResponse<EnrollmentDto>>> GetByClassIdAsync(int classId, PaginationRequest request);

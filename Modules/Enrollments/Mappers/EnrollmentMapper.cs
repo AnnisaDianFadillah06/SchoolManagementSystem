@@ -19,10 +19,8 @@ public class EnrollmentMapper : Profile
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "Active"));
 
-        CreateMap<UpdateEnrollmentDto, Enrollment>()
+        CreateMap<PatchEnrollmentDto, Enrollment>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
-            .ForMember(dest => dest.StudentId, opt => opt.Ignore())
-            .ForMember(dest => dest.ClassId, opt => opt.Ignore())
             .ForMember(dest => dest.EnrollmentDate, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));

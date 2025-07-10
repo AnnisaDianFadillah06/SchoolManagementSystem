@@ -86,7 +86,7 @@ namespace SchoolManagementSystem.Modules.Students.Repositories
             return student;
         }
 
-        public async Task<Student> UpdateAsync(Student student)
+        public async Task<Student> PatchAsync(Student student)
         {
             _context.Students.Update(student);
             await _context.SaveChangesAsync();

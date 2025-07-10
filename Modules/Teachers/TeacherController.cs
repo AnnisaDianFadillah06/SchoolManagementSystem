@@ -80,10 +80,10 @@ namespace SchoolManagementSystem.Modules.Teachers
         /// <summary>
         /// Update an existing teacher - Admin only
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         [RoleAuthorize(UserRoles.Admin)]
-        public async Task<ActionResult<ApiResponse<TeacherDto>>> UpdateTeacher(
-            int id, [FromBody] UpdateTeacherDto updateDto)
+        public async Task<ActionResult<ApiResponse<TeacherDto>>> PatchTeacher(
+            int id, [FromBody] PatchTeacherDto patchDto)
         {
             if (!ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace SchoolManagementSystem.Modules.Teachers
                     errors));
             }
 
-            var response = await _teacherService.UpdateAsync(id, updateDto);
+            var response = await _teacherService.PatchAsync(id, patchDto);
             return StatusCode(response.StatusCode, response);
         }
 

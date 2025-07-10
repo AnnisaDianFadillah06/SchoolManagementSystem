@@ -82,11 +82,11 @@ namespace SchoolManagementSystem.Modules.Students
         /// <summary>
         /// Update an existing student - Admin only
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         [RoleAuthorize(UserRoles.Admin)]
-        [SwaggerRequestExample(typeof(UpdateStudentDto), typeof(UpdateStudentDtoExample))]
-        public async Task<ActionResult<ApiResponse<StudentDto>>> UpdateStudent(
-            int id, [FromBody] UpdateStudentDto updateDto)
+        [SwaggerRequestExample(typeof(PatchStudentDto), typeof(PatchStudentDtoExample))]
+        public async Task<ActionResult<ApiResponse<StudentDto>>> PatchStudent(
+            int id, [FromBody] PatchStudentDto patchDto)
         {
             if (!ModelState.IsValid)
             {
@@ -98,7 +98,7 @@ namespace SchoolManagementSystem.Modules.Students
                     errors));
             }
 
-            var response = await _studentService.UpdateAsync(id, updateDto);
+            var response = await _studentService.PatchAsync(id, patchDto);
             return StatusCode(response.StatusCode, response);
         }
 

@@ -5,6 +5,8 @@ using SchoolManagementSystem.Common.Responses;
 using SchoolManagementSystem.Modules.Enrollments.Dtos;
 using SchoolManagementSystem.Modules.Enrollments.Entities;
 using SchoolManagementSystem.Modules.Enrollments.Repositories;
+using SchoolManagementSystem.Modules.Students.Repositories;
+using SchoolManagementSystem.Modules.Classes.Repositories;
 using SchoolManagementSystem.Modules.Enrollments.Services;
 using Xunit;
 
@@ -14,13 +16,15 @@ namespace SchoolManagementSystem.Tests.Modules.Enrollments.Services
     {
         private readonly Mock<IEnrollmentRepository> _mockEnrollmentRepository;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IStudentRepository> _mockStudentRepository;
+        private readonly Mock<IClassRepository> _mockClassRepository;
         private readonly EnrollmentService _enrollmentService;
 
         public EnrollmentServiceTests()
         {
             _mockEnrollmentRepository = new Mock<IEnrollmentRepository>();
             _mockMapper = new Mock<IMapper>();
-            _enrollmentService = new EnrollmentService(_mockEnrollmentRepository.Object, _mockMapper.Object);
+            _enrollmentService = new EnrollmentService(_mockEnrollmentRepository.Object, _mockMapper.Object, _mockClassRepository.Object, _mockStudentRepository.Object);
         }
 
         [Fact]
@@ -125,18 +129,18 @@ namespace SchoolManagementSystem.Tests.Modules.Enrollments.Services
         {
             // Arrange
             var id = 1;
-            var updateDto = new UpdateEnrollmentDto { Status = "Completed" };
+            var updateDto = new PatchEnrollmentDto { Status = "Completed" };
             var existingEnrollment = new Enrollment { Id = 1, StudentId = 1, ClassId = 1, Status = "Active" };
             var updatedEnrollment = new Enrollment { Id = 1, StudentId = 1, ClassId = 1, Status = "Completed" };
             var enrollmentDto = new EnrollmentDto { Id = 1, StudentId = 1, ClassId = 1, Status = "Completed" };
 
             _mockEnrollmentRepository.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(existingEnrollment);
             _mockMapper.Setup(m => m.Map(updateDto, existingEnrollment));
-            _mockEnrollmentRepository.Setup(r => r.UpdateAsync(existingEnrollment)).ReturnsAsync(updatedEnrollment);
+            _mockEnrollmentRepository.Setup(r => r.PatchAsync(existingEnrollment)).ReturnsAsync(updatedEnrollment);
             _mockMapper.Setup(m => m.Map<EnrollmentDto>(updatedEnrollment)).Returns(enrollmentDto);
 
             // Act
-            var result = await _enrollmentService.UpdateAsync(id, updateDto);
+            var result = await _enrollmentService.PatchAsync(id, updateDto);
 
             // Assert
             Assert.True(result.Success);
@@ -150,11 +154,11 @@ namespace SchoolManagementSystem.Tests.Modules.Enrollments.Services
         {
             // Arrange
             var id = 1;
-            var updateDto = new UpdateEnrollmentDto { Status = "Completed" };
+            var updateDto = new PatchEnrollmentDto { Status = "Completed" };
             _mockEnrollmentRepository.Setup(r => r.GetByIdAsync(id)).ReturnsAsync((Enrollment?)null);
 
             // Act
-            var result = await _enrollmentService.UpdateAsync(id, updateDto);
+            var result = await _enrollmentService.PatchAsync(id, updateDto);
 
             // Assert
             Assert.False(result.Success);
@@ -167,12 +171,12 @@ namespace SchoolManagementSystem.Tests.Modules.Enrollments.Services
         {
             // Arrange
             var id = 1;
-            var updateDto = new UpdateEnrollmentDto { Status = "Invalid" };
+            var updateDto = new PatchEnrollmentDto { Status = "Invalid" };
             var existingEnrollment = new Enrollment { Id = 1, StudentId = 1, ClassId = 1, Status = "Active" };
             _mockEnrollmentRepository.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(existingEnrollment);
 
             // Act
-            var result = await _enrollmentService.UpdateAsync(id, updateDto);
+            var result = await _enrollmentService.PatchAsync(id, updateDto);
 
             // Assert
             Assert.False(result.Success);
@@ -185,13 +189,13 @@ namespace SchoolManagementSystem.Tests.Modules.Enrollments.Services
         {
             // Arrange
             var id = 1;
-            var updateDto = new UpdateEnrollmentDto { Status = "Active" };
+            var updateDto = new PatchEnrollmentDto { Status = "Active" };
             var existingEnrollment = new Enrollment { Id = 1, StudentId = 1, ClassId = 1, Status = "Inactive" };
             _mockEnrollmentRepository.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(existingEnrollment);
             _mockEnrollmentRepository.Setup(r => r.CanEnrollAsync(1)).ReturnsAsync(false);
 
             // Act
-            var result = await _enrollmentService.UpdateAsync(id, updateDto);
+            var result = await _enrollmentService.PatchAsync(id, updateDto);
 
             // Assert
             Assert.False(result.Success);

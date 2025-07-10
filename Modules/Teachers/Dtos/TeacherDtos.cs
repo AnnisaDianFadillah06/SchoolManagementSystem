@@ -45,33 +45,27 @@ public class CreateTeacherDto {
 
 }
 
-public class UpdateTeacherDto {
-    [Required]
+public class PatchTeacherDto
+{
     [StringLength(20)]
-    public string NIP { get; set; } = string.Empty;
+    public string? NIP { get; set; }
 
-    [Required]
     [StringLength(100)]
-    public string FirstName { get; set; } = string.Empty;
+    public string? FirstName { get; set; }
 
-    [Required]
     [StringLength(100)]
-    public string LastName { get; set; } = string.Empty;
+    public string? LastName { get; set; }
 
-    [Required]
     [EmailAddress]
     [StringLength(255)]
-    public string Email { get; set; } = string.Empty;
+    public string? Email { get; set; }
 
     [StringLength(20)]
     public string? Phone { get; set; }
 
-    [Required]
     [StringLength(100)]
-    public string Subject { get; set; } = string.Empty;
+    public string? Subject { get; set; }
 
-    [Required]
     [StringLength(200)]
-    public string Qualification { get; set; } = string.Empty;
-
+    public string? Qualification { get; set; }
 }

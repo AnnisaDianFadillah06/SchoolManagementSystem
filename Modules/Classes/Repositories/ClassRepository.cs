@@ -88,7 +88,7 @@ namespace SchoolManagementSystem.Modules.Classes.Repositorie
             return classEntity;
         }
 
-        public async Task<Class> UpdateAsync(Class classEntity)
+        public async Task<Class> PatchAsync(Class classEntity)
         {
             _context.Classes.Update(classEntity);
             await _context.SaveChangesAsync();

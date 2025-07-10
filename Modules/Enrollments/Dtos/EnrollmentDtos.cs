@@ -24,8 +24,15 @@ namespace SchoolManagementSystem.Modules.Enrollments.Dtos
 
     }
 
-    public class UpdateEnrollmentDto
+    public class PatchEnrollmentDto
     {
-        [Required] public string Status { get; set; } = string.Empty; // Active, Inactive, Completed 
+        public int? StudentId { get; set; }
+
+        public int? ClassId { get; set; }
+
+        [Required]
+        [RegularExpression("Active|Inactive|Completed", ErrorMessage = "Status must be Active, Inactive, or Completed")]
+        public string Status { get; set; } = string.Empty;
     }
+
 }

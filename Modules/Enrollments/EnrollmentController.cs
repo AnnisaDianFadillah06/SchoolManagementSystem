@@ -195,10 +195,10 @@ namespace SchoolManagementSystem.Modules.Enrollments
         /// <summary>
         /// Update an existing enrollment - Admin only
         /// </summary>
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         [RoleAuthorize(UserRoles.Admin)]
-        public async Task<ActionResult<ApiResponse<EnrollmentDto>>> UpdateEnrollment(
-            int id, [FromBody] UpdateEnrollmentDto updateDto)
+        public async Task<ActionResult<ApiResponse<EnrollmentDto>>> PatchEnrollment(
+            int id, [FromBody] PatchEnrollmentDto patchDto)
         {
             if (!ModelState.IsValid)
             {
@@ -210,7 +210,7 @@ namespace SchoolManagementSystem.Modules.Enrollments
                     errors));
             }
 
-            var response = await _enrollmentService.UpdateAsync(id, updateDto);
+            var response = await _enrollmentService.PatchAsync(id, patchDto);
             return StatusCode(response.StatusCode, response);
         }
 

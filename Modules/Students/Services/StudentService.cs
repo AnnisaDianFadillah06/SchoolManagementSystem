@@ -82,31 +82,39 @@ namespace SchoolManagementSystem.Modules.Students.Services
                 AppConstants.StatusCodes.Created);
         }
 
-        public async Task<ApiResponse<StudentDto>> UpdateAsync(int id, UpdateStudentDto updateDto)
+        public async Task<ApiResponse<StudentDto>> PatchAsync(int id, PatchStudentDto patchDto)
         {
             var existingStudent = await _studentRepository.GetByIdAsync(id);
             if (existingStudent == null)
             {
                 return ApiResponse<StudentDto>.ErrorResponse(
-                    AppConstants.Messages.StudentNotFound, 
+                    AppConstants.Messages.StudentNotFound,
                     AppConstants.StatusCodes.NotFound);
             }
 
-            // Check if email already exists (excluding current student)
-            if (await _studentRepository.EmailExistsAsync(updateDto.Email, id))
+            if (!string.IsNullOrWhiteSpace(patchDto.Email) &&
+                await _studentRepository.EmailExistsAsync(patchDto.Email, id))
             {
                 return ApiResponse<StudentDto>.ErrorResponse(
-                    "Email already exists", 
+                    "Email already exists",
                     AppConstants.StatusCodes.BadRequest);
             }
 
-            _mapper.Map(updateDto, existingStudent);
-            var updatedStudent = await _studentRepository.UpdateAsync(existingStudent);
-            var studentDto = _mapper.Map<StudentDto>(updatedStudent);
-            
-            return ApiResponse<StudentDto>.SuccessResponse(
-                studentDto, 
-                AppConstants.Messages.StudentUpdated);
+            // Partial update manual mapping
+            if (!string.IsNullOrWhiteSpace(patchDto.NISN)) existingStudent.NISN = patchDto.NISN;
+            if (!string.IsNullOrWhiteSpace(patchDto.FirstName)) existingStudent.FirstName = patchDto.FirstName;
+            if (!string.IsNullOrWhiteSpace(patchDto.LastName)) existingStudent.LastName = patchDto.LastName;
+            if (!string.IsNullOrWhiteSpace(patchDto.Email)) existingStudent.Email = patchDto.Email;
+            if (!string.IsNullOrWhiteSpace(patchDto.Phone)) existingStudent.Phone = patchDto.Phone;
+            if (patchDto.DateOfBirth.HasValue) existingStudent.DateOfBirth = patchDto.DateOfBirth.Value;
+            if (!string.IsNullOrWhiteSpace(patchDto.Address)) existingStudent.Address = patchDto.Address;
+
+            existingStudent.UpdatedAt = DateTime.UtcNow;
+
+            var updated = await _studentRepository.PatchAsync(existingStudent);
+            var dto = _mapper.Map<StudentDto>(updated);
+
+            return ApiResponse<StudentDto>.SuccessResponse(dto, AppConstants.Messages.StudentUpdated);
         }
 
         public async Task<ApiResponse<bool>> DeleteAsync(int id)

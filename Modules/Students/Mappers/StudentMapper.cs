@@ -15,7 +15,7 @@ namespace SchoolManagementSystem.Modules.Students.Mappers
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));
                 
-            CreateMap<UpdateStudentDto, Student>()
+            CreateMap<PatchStudentDto, Student>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore()) // Don't map ID for updates
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore()) // Don't update CreatedAt
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));

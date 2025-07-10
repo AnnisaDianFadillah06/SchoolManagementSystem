@@ -47,31 +47,26 @@ public class CreateStudentDto
     public string? Address { get; set; }
 }
 
-public class UpdateStudentDto
+public class PatchStudentDto
 {
-    [Required]
     [StringLength(20)]
-    public string NISN { get; set; } = string.Empty;
-    
-    [Required]
+    public string? NISN { get; set; }
+
     [StringLength(100)]
-    public string FirstName { get; set; } = string.Empty;
-    
-    [Required]
+    public string? FirstName { get; set; }
+
     [StringLength(100)]
-    public string LastName { get; set; } = string.Empty;
-    
-    [Required]
+    public string? LastName { get; set; }
+
     [EmailAddress]
     [StringLength(255)]
-    public string Email { get; set; } = string.Empty;
-    
+    public string? Email { get; set; }
+
     [StringLength(20)]
     public string? Phone { get; set; }
-    
-    [Required]
-    public DateTime DateOfBirth { get; set; }
-    
+
+    public DateTime? DateOfBirth { get; set; }
+
     [StringLength(500)]
     public string? Address { get; set; }
 }

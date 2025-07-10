@@ -225,7 +225,7 @@ namespace SchoolManagementSystem.Modules.Enrollments.Repositories
             return enrollment;
         }
 
-        public async Task<Enrollment> UpdateAsync(Enrollment enrollment)
+        public async Task<Enrollment> PatchAsync(Enrollment enrollment)
         {
             _context.Enrollments.Update(enrollment);
             await _context.SaveChangesAsync();

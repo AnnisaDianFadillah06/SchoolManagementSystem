@@ -8,7 +8,7 @@ namespace SchoolManagementSystem.Modules.Teachers.Repositories
         Task<Teacher?> GetByIdAsync(int id);
         Task<(List<Teacher> teachers, int totalCount)> GetAllAsync(PaginationRequest request);
         Task<Teacher> CreateAsync(Teacher teacher);
-        Task<Teacher> UpdateAsync(Teacher teacher);
+        Task<Teacher> PatchAsync(Teacher teacher);
         Task<bool> DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
         Task<bool> EmailExistsAsync(string email, int? excludeId = null);

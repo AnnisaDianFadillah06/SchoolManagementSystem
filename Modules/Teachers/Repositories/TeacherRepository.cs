@@ -90,7 +90,7 @@ namespace SchoolManagementSystem.Modules.Teachers.Repositories
             return teacher;
         }
 
-        public async Task<Teacher> UpdateAsync(Teacher teacher)
+        public async Task<Teacher> PatchAsync(Teacher teacher)
         {
             _context.Teachers.Update(teacher);
             await _context.SaveChangesAsync();
